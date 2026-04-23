@@ -362,7 +362,7 @@ const TaxINVoiceReceipt = ({
                                 makingCharges: totals.makingCharges + Number(item.making_charges || 0),
                                 stonePrice: totals.stonePrice + Number(item.stone_price || 0),
                                 rateAmount: totals.rateAmount + Number(item.rate_amt || 0),
-                                hmCharges : totals.hmCharges + Number(item.hm_charges || 0),
+                                hmCharges: totals.hmCharges + Number(item.hm_charges || 0),
                         };
                 },
                 {
@@ -374,7 +374,7 @@ const TaxINVoiceReceipt = ({
                         makingCharges: 0,
                         stonePrice: 0,
                         rateAmount: 0,
-                        hmCharges:0,
+                        hmCharges: 0,
                 }
         );
 
@@ -484,8 +484,12 @@ const TaxINVoiceReceipt = ({
                                                                 <Text style={[styles.tableCell, styles.tableCellQty]}>Qty</Text>
                                                                 <View style={styles.divider1} />
 
-                                                                <Text style={[styles.tableCell, styles.tableCellPurity]}>Purity</Text>
-                                                                <View style={styles.divider1} />
+                                                                {!repairDetails.some(item => item.metal_type?.toLowerCase() === "silver") && (
+                                                                        <>
+                                                                                <Text style={[styles.tableCell, styles.tableCellPurity]}>Purity</Text>
+                                                                                <View style={styles.divider1} />
+                                                                        </>
+                                                                )}
 
                                                                 <Text style={[styles.tableCell, styles.tableCellGrossWt]}>Gross.Wt
                                                                         <Text style={{ fontFamily: 'Times-Roman', fontSize: 7 }}>  In Gms</Text>
@@ -549,11 +553,14 @@ const TaxINVoiceReceipt = ({
                                                                                                 })()}
                                                                                         </Text> */}
 
-                                                                                        <Text style={[styles.tableCell, styles.tableCellPurity]}>
-                                                                                                {item.printing_purity || "0.000"}
-                                                                                        </Text>
-
-                                                                                        <View style={[styles.divider1, { marginTop: -2 }]} />
+                                                                                        {!repairDetails.some(item => item.metal_type?.toLowerCase() === "silver") && (
+                                                                                                <>
+                                                                                                        <Text style={[styles.tableCell, styles.tableCellPurity]}>
+                                                                                                                {item.printing_purity || "0.000"}
+                                                                                                        </Text>
+                                                                                                        <View style={[styles.divider1, { marginTop: -2 }]} />
+                                                                                                </>
+                                                                                        )}
 
                                                                                         <Text style={[styles.tableCell, styles.tableCellGrossWt]}>
                                                                                                 {item.gross_weight || "0.000"}
@@ -613,8 +620,12 @@ const TaxINVoiceReceipt = ({
                                                                                 <Text style={[styles.fillerCellQty]}></Text>
                                                                                 <View style={[styles.divider1, { marginTop: -2 }]} />
 
-                                                                                <Text style={[styles.fillerCellPurity]}></Text>
-                                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
+                                                                                {!repairDetails.some(item => item.metal_type?.toLowerCase() === "silver") && (
+                                                                                        <>
+                                                                                                <Text style={[styles.fillerCellPurity]}></Text>
+                                                                                                <View style={[styles.divider1, { marginTop: -2 }]} />
+                                                                                        </>
+                                                                                )}
 
                                                                                 <Text style={[styles.fillerCellGrossWt]}></Text>
                                                                                 <View style={[styles.divider1, { marginTop: -2 }]} />
@@ -658,8 +669,12 @@ const TaxINVoiceReceipt = ({
                                                         </Text>
                                                         <View style={[styles.divider1, { marginTop: -2 }]} />
 
-                                                        <Text style={[styles.tableCell, styles.tableCellPurity, styles.lastheight]}></Text>
-                                                        <View style={[styles.divider1, { marginTop: -2 }]} />
+                                                        {!repairDetails.some(item => item.metal_type?.toLowerCase() === "silver") && (
+                                                                <>
+                                                                        <Text style={[styles.tableCell, styles.tableCellPurity, styles.lastheight]}></Text>
+                                                                        <View style={[styles.divider1, { marginTop: -2 }]} />
+                                                                </>
+                                                        )}
 
                                                         <Text style={[styles.tableCell, styles.tableCellGrossWt, styles.lastheight]}>
                                                                 {totalValues.grossWeight.toFixed(3)}
@@ -739,7 +754,7 @@ const TaxINVoiceReceipt = ({
                                                                                 <Text>Bank A/C Name:</Text>
                                                                                 <Text>{company?.bank_name || ""}</Text>
                                                                         </View>
-                                                                         <View style={styles.summaryItem}>
+                                                                        <View style={styles.summaryItem}>
                                                                                 <Text>IFSC Code:</Text>
                                                                                 <Text>{company?.ifsc_code || ""}</Text>
                                                                         </View>
@@ -779,7 +794,7 @@ const TaxINVoiceReceipt = ({
                                                                                 <Text>Net Bill Value:</Text>
                                                                                 <Text>{netAmount.toFixed(2)}</Text>
                                                                         </View>
-                                                                        
+
                                                                         <View style={styles.summaryItem}>
                                                                                 <Text>(-) SCHEME:</Text>
                                                                                 <Text>{schemeAmount.toFixed(2)}</Text>

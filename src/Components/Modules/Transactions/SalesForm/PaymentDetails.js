@@ -31,6 +31,7 @@ const PaymentDetails = ({
   netPayAmount,
   discount,
   handleDiscountChange,
+  handleDiscountAmountChange,
   refreshSalesData,
   offers,
   loading,
@@ -180,20 +181,29 @@ const PaymentDetails = ({
                 <td colSpan="4">{totalAmount.toFixed(2)}</td>
               </tr>
               <tr style={{ fontSize: "13px" }}>
-                <td colSpan="12" className="text-right">
+                <td colSpan="8" className="text-right">
                   Discount Amount
                 </td>
                 <td colSpan="4">
-                  {" "}
-                  @
                   <input
                     type="number"
-                    value={discount}
-                    onChange={handleDiscountChange}
+                    value={discount || ''}
+                    onChange={(e) => handleDiscountChange(e.target.value)}
+                    placeholder="%"
                     style={{ width: "70px", padding: "2px", fontSize: "13px" }}
                   />
+                  <span style={{ marginLeft: "5px" }}>%</span>
                 </td>
-                <td colSpan="4">{discountAmt.toFixed(2)}</td>
+                <td colSpan="4">
+                  <input
+                    type="number"
+                    value={discountAmt === 0 ? "" : discountAmt}
+                    onChange={(e) => handleDiscountAmountChange(e.target.value)}
+                    placeholder="Amount"
+                    style={{ width: "100px", padding: "2px", fontSize: "13px" }}
+                  />
+                </td>
+                <td colSpan="4"></td>
               </tr>
               <tr style={{ fontSize: "13px" }}>
                 <td colSpan="12" className="text-right">
@@ -411,7 +421,7 @@ const PaymentDetails = ({
                   padding: "4px 10px",
                   fontSize: "14px",
                 }}
-                // disabled={!isSubmitEnabled}
+              // disabled={!isSubmitEnabled}
               >
                 Close
               </Button>
