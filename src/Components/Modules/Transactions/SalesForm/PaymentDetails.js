@@ -52,12 +52,16 @@ const PaymentDetails = ({
   handleManualNetPayAmountChange,
   manualNetPayAmount,
   selectedAdvanceReceiptAmount,
+  //  discountType,        
+  onDiscountTypeChange, 
 }) => {
   const [isSubmitEnabled, setIsSubmitEnabled] = useState(false);
   const location = useLocation();
   const [appliedOfferKey, setAppliedOfferKey] = useState(null);
   const navigate = useNavigate();
   // In your component state
+
+  const [discountType, setDiscountType] = useState("MC");
 
   let rounded = Math.round(netPayableAmount); // Rounds to nearest whole number
   console.log(rounded);
@@ -182,13 +186,23 @@ const PaymentDetails = ({
               </tr>
               <tr style={{ fontSize: "13px" }}>
                 <td colSpan="8" className="text-right">
-                  Discount Amount
+                  Discount {discountType === "MC" ? "" : ""}
+                </td>
+                <td colSpan="4">
+                  <select
+                    value={discountType}
+                    onChange={(e) => setDiscountType(e.target.value)}
+                    style={{ width: "100px", padding: "2px", fontSize: "13px", marginRight: "5px" }}
+                  >
+                    <option value="MC">On MC</option>
+                    <option value="Total">On T.Amt</option>
+                  </select>
                 </td>
                 <td colSpan="4">
                   <input
                     type="number"
                     value={discount || ''}
-                    onChange={(e) => handleDiscountChange(e.target.value)}
+                    onChange={(e) => handleDiscountChange(e.target.value, discountType)}
                     placeholder="%"
                     style={{ width: "70px", padding: "2px", fontSize: "13px" }}
                   />
@@ -198,12 +212,11 @@ const PaymentDetails = ({
                   <input
                     type="number"
                     value={discountAmt === 0 ? "" : discountAmt}
-                    onChange={(e) => handleDiscountAmountChange(e.target.value)}
+                    onChange={(e) => handleDiscountAmountChange(e.target.value, discountType)}
                     placeholder="Amount"
                     style={{ width: "100px", padding: "2px", fontSize: "13px" }}
                   />
                 </td>
-                <td colSpan="4"></td>
               </tr>
               <tr style={{ fontSize: "13px" }}>
                 <td colSpan="12" className="text-right">

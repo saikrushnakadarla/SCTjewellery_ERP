@@ -76,6 +76,10 @@ const RepairsTable = () => {
         accessor: 'invoice_number',
       },
       {
+        Header: 'Total Wt',
+        accessor: 'total_weight_av',
+      },
+      {
         Header: 'Order No',
         accessor: 'order_number',
       },
@@ -224,16 +228,16 @@ const RepairsTable = () => {
                   }}
                   onClick={() => {
                     // if (isToday) {
-                      handleEdit(
-                        row.original.invoice_number,
-                        row.original.mobile,
-                        row.original.cash_amount,
-                        row.original.card_amt,
-                        row.original.chq_amt,
-                        row.original.online_amt,
-                        row.original.sale_return_amt,
-                        row.original.advance_receipt_amt
-                      );
+                    handleEdit(
+                      row.original.invoice_number,
+                      row.original.mobile,
+                      row.original.cash_amount,
+                      row.original.card_amt,
+                      row.original.chq_amt,
+                      row.original.online_amt,
+                      row.original.sale_return_amt,
+                      row.original.advance_receipt_amt
+                    );
                     // }
                   }}
                 />
@@ -274,19 +278,19 @@ const RepairsTable = () => {
               /> */}
               {/* Delete icon (only for ADMIN) */}
               {/* {isAdmin && ( */}
-                <FaTrash
-                  style={{
-                    cursor: 'pointer',
-                    marginLeft: '10px',
-                    color: 'red',
-                    color: 'red',
-                  }}
-                  onClick={() => {
-                    // if (isToday) {
-                      handleDelete(row.original.invoice_number);
-                    // }
-                  }}
-                />
+              <FaTrash
+                style={{
+                  cursor: 'pointer',
+                  marginLeft: '10px',
+                  color: 'red',
+                  color: 'red',
+                }}
+                onClick={() => {
+                  // if (isToday) {
+                  handleDelete(row.original.invoice_number);
+                  // }
+                }}
+              />
               {/* )} */}
             </div>
           );

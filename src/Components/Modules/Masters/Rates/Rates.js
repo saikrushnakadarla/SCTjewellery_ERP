@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 const Rates = () => {
     const [rates, setRates] = useState({
         currentDate: new Date().toISOString().split('T')[0],
+        gold9: '',
         gold16: '',
         gold18: '',
         gold22: '',
@@ -16,6 +17,7 @@ const Rates = () => {
 
     const navigate = useNavigate();
 
+    const [allowEdit9, setAllowEdit9] = useState(false);
     const [allowEdit16, setAllowEdit16] = useState(false);
     const [allowEdit18, setAllowEdit18] = useState(false);
     const [allowEdit24, setAllowEdit24] = useState(false);
@@ -32,6 +34,7 @@ const Rates = () => {
                     const formattedDate = localDate.toISOString().split('T')[0];
 
                     setRates({
+                        gold9: result.rate_9crt,
                         gold16: result.rate_16crt,
                         gold18: result.rate_18crt,
                         gold22: result.rate_22crt,
@@ -54,16 +57,24 @@ const Rates = () => {
         const gold24 = Math.round((gold22Value * 24) / 22);
         const gold18 = Math.round(gold24 * 0.76);
         const gold16 = Math.round(gold24 * 0.6);
+        const gold9 = Math.round(gold24 * 0.375);
 
         return {
             gold24,
             gold18,
             gold16,
+            gold9,
         };
     };
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
+
+        if (name === 'gold9' && !allowEdit9) {
+            const confirmChange = window.confirm("You are modifying the 9K gold rate. Do you want to proceed?");
+            if (!confirmChange) return;
+            setAllowEdit9(true);
+        }
 
         if (name === 'gold16' && !allowEdit16) {
             const confirmChange = window.confirm("You are modifying the 14K gold rate. Do you want to proceed?");
@@ -91,6 +102,7 @@ const Rates = () => {
                 gold24: calculated.gold24,
                 gold18: calculated.gold18,
                 gold16: calculated.gold16,
+                gold9: calculated.gold9,
             }));
         } else {
             setRates((prevRates) => ({
@@ -101,11 +113,12 @@ const Rates = () => {
     };
 
     const handleUpdateRates = async () => {
-        const { gold16, gold18, gold22, gold24, silverRate } = rates;
+        const { gold9, gold16, gold18, gold22, gold24, silverRate } = rates;
 
         const requestData = {
             rate_date: new Date().toISOString().split('T')[0],
             rate_time: new Date().toLocaleTimeString(),
+            rate_9crt: Math.round(gold9),
             rate_16crt: Math.round(gold16),
             rate_18crt: Math.round(gold18),
             rate_22crt: Math.round(gold22),
@@ -158,6 +171,13 @@ const Rates = () => {
                         Enter Today Gold Rate
                     </h3>
                     <div className="form-row">
+                        <InputField
+                            label="9 Crt"
+                            name="gold9"
+                            type="text"
+                            value={rates.gold9}
+                            onChange={handleInputChange}
+                        />
                         <InputField
                             label="14 Crt"
                             name="gold16"

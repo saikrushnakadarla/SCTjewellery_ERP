@@ -166,6 +166,23 @@ const styles = StyleSheet.create({
     borderRightWidth: 0,
   },
 
+  // Alternative styles when purity column is hidden
+  srsPdfCellSlNoNoPurity: { width: "5.5%" },
+  srsPdfCellParticularsNoPurity: { width: "24%" },
+  srsPdfCellHsnNoPurity: { width: "8%" },
+  srsPdfCellPcsNoPurity: { width: "5.5%" },
+  srsPdfCellGrossWtNoPurity: { width: "10%" },
+  srsPdfCellStWtNoPurity: { width: "8%" },
+  srsPdfCellNetWtNoPurity: { width: "10%" },
+  srsPdfCellStChgNoPurity: { width: "8%" },
+  srsPdfCellVaNoPurity: { width: "7%" },
+  srsPdfCellMcNoPurity: { width: "8%" },
+  srsPdfCellRateNoPurity: { width: "10%" },
+  srsPdfCellAmountNoPurity: {
+    width: "11%",
+    borderRightWidth: 0,
+  },
+
   srsPdfHeadText: {
     fontSize: 6,
     fontWeight: "bold",
@@ -333,6 +350,11 @@ const TaxINVoiceReceipt = ({
     generateQRCode();
   }, [formData?.invoice_number]);
 
+  // Check if any item in repairDetails has category including "silver" (case-insensitive)
+  const hasSilverItem = repairDetails.some(item =>
+    item.category && item.category.toLowerCase().includes('silver')
+  );
+
   // Calculate total values from repairDetails
   const totalValues = repairDetails.reduce(
     (totals, item) => {
@@ -401,6 +423,83 @@ const TaxINVoiceReceipt = ({
   const companyEmail = company?.email || "sales@srsjewellers.com";
   const companyName = company?.company_name || "MANIKANTHA JEWELLERS";
 
+  // Define table headers based on whether silver is present
+  const getTableHeaders = () => {
+    if (hasSilverItem) {
+      // Without Purity column
+      return [
+        ["Sl No", "srsPdfCellSlNoNoPurity", "srsPdfCellSlNoNoPurity"],
+        ["Particulars", "srsPdfCellParticularsNoPurity", "srsPdfCellParticularsNoPurity"],
+        ["HSN", "srsPdfCellHsnNoPurity", "srsPdfCellHsnNoPurity"],
+        ["Pcs", "srsPdfCellPcsNoPurity", "srsPdfCellPcsNoPurity"],
+        ["Gross Wt", "srsPdfCellGrossWtNoPurity", "srsPdfCellGrossWtNoPurity"],
+        ["St Wt", "srsPdfCellStWtNoPurity", "srsPdfCellStWtNoPurity"],
+        ["Net Wt", "srsPdfCellNetWtNoPurity", "srsPdfCellNetWtNoPurity"],
+        ["St Chg", "srsPdfCellStChgNoPurity", "srsPdfCellStChgNoPurity"],
+        ["VA", "srsPdfCellVaNoPurity", "srsPdfCellVaNoPurity"],
+        ["MC", "srsPdfCellMcNoPurity", "srsPdfCellMcNoPurity"],
+        ["Rate", "srsPdfCellRateNoPurity", "srsPdfCellRateNoPurity"],
+        ["Amount", "srsPdfCellAmountNoPurity", "srsPdfCellAmountNoPurity"],
+      ];
+    } else {
+      // With Purity column
+      return [
+        ["Sl No", "srsPdfCellSlNo", "srsPdfCellSlNo"],
+        ["Particulars", "srsPdfCellParticulars", "srsPdfCellParticulars"],
+        ["HSN", "srsPdfCellHsn", "srsPdfCellHsn"],
+        ["Pcs", "srsPdfCellPcs", "srsPdfCellPcs"],
+        ["Purity", "srsPdfCellPurity", "srsPdfCellPurity"],
+        ["Gross Wt", "srsPdfCellGrossWt", "srsPdfCellGrossWt"],
+        ["St Wt", "srsPdfCellStWt", "srsPdfCellStWt"],
+        ["Net Wt", "srsPdfCellNetWt", "srsPdfCellNetWt"],
+        ["St Chg", "srsPdfCellStChg", "srsPdfCellStChg"],
+        ["VA", "srsPdfCellVa", "srsPdfCellVa"],
+        ["MC", "srsPdfCellMc", "srsPdfCellMc"],
+        ["Rate", "srsPdfCellRate", "srsPdfCellRate"],
+        ["Amount", "srsPdfCellAmount", "srsPdfCellAmount"],
+      ];
+    }
+  };
+
+  // Define cell styles array for data rows based on whether silver is present
+  const getDataRowCellStyles = () => {
+    if (hasSilverItem) {
+      return [
+        "srsPdfCellSlNoNoPurity",
+        "srsPdfCellParticularsNoPurity",
+        "srsPdfCellHsnNoPurity",
+        "srsPdfCellPcsNoPurity",
+        "srsPdfCellGrossWtNoPurity",
+        "srsPdfCellStWtNoPurity",
+        "srsPdfCellNetWtNoPurity",
+        "srsPdfCellStChgNoPurity",
+        "srsPdfCellVaNoPurity",
+        "srsPdfCellMcNoPurity",
+        "srsPdfCellRateNoPurity",
+        "srsPdfCellAmountNoPurity",
+      ];
+    } else {
+      return [
+        "srsPdfCellSlNo",
+        "srsPdfCellParticulars",
+        "srsPdfCellHsn",
+        "srsPdfCellPcs",
+        "srsPdfCellPurity",
+        "srsPdfCellGrossWt",
+        "srsPdfCellStWt",
+        "srsPdfCellNetWt",
+        "srsPdfCellStChg",
+        "srsPdfCellVa",
+        "srsPdfCellMc",
+        "srsPdfCellRate",
+        "srsPdfCellAmount",
+      ];
+    }
+  };
+
+  const tableHeaders = getTableHeaders();
+  const dataRowCellStyles = getDataRowCellStyles();
+
   return (
     <Document>
       <Page size="A5" orientation="landscape" style={styles.srsPdfPage}>
@@ -419,6 +518,9 @@ const TaxINVoiceReceipt = ({
             <Text style={styles.srsPdfCompanyAddress}>
               Keshavakrupa complex, near chennakeshava swamy temple, kote, belur 573115
             </Text>
+            <Text style={[styles.srsPdfCompanyAddress, { marginTop: 2 }]}>
+              Ph: 9535403545
+            </Text>
           </View>
 
           {/* Right - Invoice Number, Date, Time (line by line) */}
@@ -434,7 +536,7 @@ const TaxINVoiceReceipt = ({
         {/* ===================================================== */}
         <View style={styles.srsPdfCustomerRow}>
           <Text style={styles.srsPdfCustomerText}>
-            Customer: {formData?.account_name || ""} | Mobile: {formData?.mobile || ""} | 
+            Customer: {formData?.account_name || ""} | Mobile: {formData?.mobile || ""} |
             GSTIN: {formData?.gst_in || ""} | PAN: {formData?.pan_card || ""}
           </Text>
           <Text style={styles.srsPdfCustomerText}>
@@ -448,21 +550,7 @@ const TaxINVoiceReceipt = ({
         <View style={styles.srsPdfTableWrap}>
           {/* TABLE HEADER */}
           <View style={styles.srsPdfTableHead}>
-            {[
-              ["Sl No", "srsPdfCellSlNo"],
-              ["Particulars", "srsPdfCellParticulars"],
-              ["HSN", "srsPdfCellHsn"],
-              ["Pcs", "srsPdfCellPcs"],
-              ["Purity", "srsPdfCellPurity"],
-              ["Gross Wt", "srsPdfCellGrossWt"],
-              ["St Wt", "srsPdfCellStWt"],
-              ["Net Wt", "srsPdfCellNetWt"],
-              ["St Chg", "srsPdfCellStChg"],
-              ["VA", "srsPdfCellVa"],
-              ["MC", "srsPdfCellMc"],
-              ["Rate", "srsPdfCellRate"],
-              ["Amount", "srsPdfCellAmount"],
-            ].map(([label, className], index) => (
+            {tableHeaders.map(([label, className], index) => (
               <View
                 key={index}
                 style={[styles.srsPdfCellBase, styles[className]]}
@@ -482,69 +570,120 @@ const TaxINVoiceReceipt = ({
               parseFloat(item.stone_price || 0) +
               parseFloat(item.making_charges || 0) +
               parseFloat(item.hm_charges || 0);
+
             return (
               <View key={idx} style={styles.srsPdfTableRow}>
-                <View style={[styles.srsPdfCellBase, styles.srsPdfCellSlNo]}>
+                <View style={[styles.srsPdfCellBase, styles[dataRowCellStyles[0]]]}>
                   <Text style={styles.srsPdfCenterText}>{idx + 1}</Text>
                 </View>
-                <View style={[styles.srsPdfCellBase, styles.srsPdfCellParticulars]}>
+                <View style={[styles.srsPdfCellBase, styles[dataRowCellStyles[1]]]}>
                   <Text style={styles.srsPdfBodyText}>
                     {item.metal_type || ""}-{item.product_name || ""}
                   </Text>
                 </View>
-                <View style={[styles.srsPdfCellBase, styles.srsPdfCellHsn]}>
+                <View style={[styles.srsPdfCellBase, styles[dataRowCellStyles[2]]]}>
                   <Text style={styles.srsPdfCenterText}>
                     {matchedProduct?.hsn_code || "711319"}
                   </Text>
                 </View>
-                <View style={[styles.srsPdfCellBase, styles.srsPdfCellPcs]}>
+                <View style={[styles.srsPdfCellBase, styles[dataRowCellStyles[3]]]}>
                   <Text style={styles.srsPdfCenterText}>{item.qty || 0}</Text>
                 </View>
-                <View style={[styles.srsPdfCellBase, styles.srsPdfCellPurity]}>
-                  <Text style={styles.srsPdfCenterText}>
-                    {item.printing_purity || "916"}
-                  </Text>
-                </View>
-                <View style={[styles.srsPdfCellBase, styles.srsPdfCellGrossWt]}>
-                  <Text style={styles.srsPdfRightText}>
-                    {formatNumber(item.gross_weight, 3)}
-                  </Text>
-                </View>
-                <View style={[styles.srsPdfCellBase, styles.srsPdfCellStWt]}>
-                  <Text style={styles.srsPdfRightText}>
-                    {formatNumber(item.stone_weight, 3)}
-                  </Text>
-                </View>
-                <View style={[styles.srsPdfCellBase, styles.srsPdfCellNetWt]}>
-                  <Text style={styles.srsPdfRightText}>
-                    {formatNumber(item.total_weight_av, 3)}
-                  </Text>
-                </View>
-                <View style={[styles.srsPdfCellBase, styles.srsPdfCellStChg]}>
-                  <Text style={styles.srsPdfRightText}>
-                    {formatNumber(item.stone_price, 2)}
-                  </Text>
-                </View>
-                <View style={[styles.srsPdfCellBase, styles.srsPdfCellVa]}>
-                  <Text style={styles.srsPdfCenterText}>10.00%</Text>
-                </View>
-                <View style={[styles.srsPdfCellBase, styles.srsPdfCellMc]}>
-                  <Text style={styles.srsPdfCenterText}>
-                    {item.mc_per_gram
-                      ? `${formatNumber(item.mc_per_gram)}%`
-                      : "0"}
-                  </Text>
-                </View>
-                <View style={[styles.srsPdfCellBase, styles.srsPdfCellRate]}>
-                  <Text style={styles.srsPdfRightText}>
-                    {item.pieace_cost ? formatNumber(item.pieace_cost, 2) : formatNumber(item.rate, 2)}
-                  </Text>
-                </View>
-                <View style={[styles.srsPdfCellBase, styles.srsPdfCellAmount]}>
-                  <Text style={styles.srsPdfRightText}>
-                    {formatNumber(totalAmount, 2)}
-                  </Text>
-                </View>
+                {/* Purity column - only render if no silver items */}
+                {!hasSilverItem && (
+                  <View style={[styles.srsPdfCellBase, styles[dataRowCellStyles[4]]]}>
+                    <Text style={styles.srsPdfCenterText}>
+                      {item.printing_purity || "916"}
+                    </Text>
+                  </View>
+                )}
+                {hasSilverItem ? (
+                  <>
+                    <View style={[styles.srsPdfCellBase, styles[dataRowCellStyles[4]]]}>
+                      <Text style={styles.srsPdfRightText}>
+                        {formatNumber(item.gross_weight, 3)}
+                      </Text>
+                    </View>
+                    <View style={[styles.srsPdfCellBase, styles[dataRowCellStyles[5]]]}>
+                      <Text style={styles.srsPdfRightText}>
+                        {formatNumber(item.stone_weight, 3)}
+                      </Text>
+                    </View>
+                    <View style={[styles.srsPdfCellBase, styles[dataRowCellStyles[6]]]}>
+                      <Text style={styles.srsPdfRightText}>
+                        {formatNumber(item.total_weight_av, 3)}
+                      </Text>
+                    </View>
+                    <View style={[styles.srsPdfCellBase, styles[dataRowCellStyles[7]]]}>
+                      <Text style={styles.srsPdfRightText}>
+                        {formatNumber(item.stone_price, 2)}
+                      </Text>
+                    </View>
+                    <View style={[styles.srsPdfCellBase, styles[dataRowCellStyles[8]]]}>
+                      <Text style={styles.srsPdfCenterText}>
+                        {item.va_percent ? `${formatNumber(item.va_percent)}%` : "0.00%"}
+                      </Text>
+                    </View>
+                    <View style={[styles.srsPdfCellBase, styles[dataRowCellStyles[9]]]}>
+                      <Text style={styles.srsPdfRightText}>
+                        {formatNumber(item.making_charges, 2)}
+                      </Text>
+                    </View>
+                    <View style={[styles.srsPdfCellBase, styles[dataRowCellStyles[10]]]}>
+                      <Text style={styles.srsPdfRightText}>
+                        {item.pieace_cost ? formatNumber(item.pieace_cost, 2) : formatNumber(item.rate, 2)}
+                      </Text>
+                    </View>
+                    <View style={[styles.srsPdfCellBase, styles[dataRowCellStyles[11]]]}>
+                      <Text style={styles.srsPdfRightText}>
+                        {formatNumber(totalAmount, 2)}
+                      </Text>
+                    </View>
+                  </>
+                ) : (
+                  <>
+                    <View style={[styles.srsPdfCellBase, styles[dataRowCellStyles[5]]]}>
+                      <Text style={styles.srsPdfRightText}>
+                        {formatNumber(item.gross_weight, 3)}
+                      </Text>
+                    </View>
+                    <View style={[styles.srsPdfCellBase, styles[dataRowCellStyles[6]]]}>
+                      <Text style={styles.srsPdfRightText}>
+                        {formatNumber(item.stone_weight, 3)}
+                      </Text>
+                    </View>
+                    <View style={[styles.srsPdfCellBase, styles[dataRowCellStyles[7]]]}>
+                      <Text style={styles.srsPdfRightText}>
+                        {formatNumber(item.total_weight_av, 3)}
+                      </Text>
+                    </View>
+                    <View style={[styles.srsPdfCellBase, styles[dataRowCellStyles[8]]]}>
+                      <Text style={styles.srsPdfRightText}>
+                        {formatNumber(item.stone_price, 2)}
+                      </Text>
+                    </View>
+                    <View style={[styles.srsPdfCellBase, styles[dataRowCellStyles[9]]]}>
+                      <Text style={styles.srsPdfCenterText}>
+                        {item.va_percent ? `${formatNumber(item.va_percent)}%` : "0.00%"}
+                      </Text>
+                    </View>
+                    <View style={[styles.srsPdfCellBase, styles[dataRowCellStyles[10]]]}>
+                      <Text style={styles.srsPdfRightText}>
+                        {formatNumber(item.making_charges, 2)}
+                      </Text>
+                    </View>
+                    <View style={[styles.srsPdfCellBase, styles[dataRowCellStyles[11]]]}>
+                      <Text style={styles.srsPdfRightText}>
+                        {item.pieace_cost ? formatNumber(item.pieace_cost, 2) : formatNumber(item.rate, 2)}
+                      </Text>
+                    </View>
+                    <View style={[styles.srsPdfCellBase, styles[dataRowCellStyles[12]]]}>
+                      <Text style={styles.srsPdfRightText}>
+                        {formatNumber(totalAmount, 2)}
+                      </Text>
+                    </View>
+                  </>
+                )}
               </View>
             );
           })}
@@ -552,21 +691,7 @@ const TaxINVoiceReceipt = ({
           {/* EMPTY ROWS (Filler) */}
           {Array.from({ length: fillerRowsNeeded }).map((_, idx) => (
             <View key={`empty-${idx}`} style={styles.srsPdfEmptyRow}>
-              {[
-                "srsPdfCellSlNo",
-                "srsPdfCellParticulars",
-                "srsPdfCellHsn",
-                "srsPdfCellPcs",
-                "srsPdfCellPurity",
-                "srsPdfCellGrossWt",
-                "srsPdfCellStWt",
-                "srsPdfCellNetWt",
-                "srsPdfCellStChg",
-                "srsPdfCellVa",
-                "srsPdfCellMc",
-                "srsPdfCellRate",
-                "srsPdfCellAmount",
-              ].map((cell, cellIdx) => (
+              {dataRowCellStyles.map((cell, cellIdx) => (
                 <View
                   key={cellIdx}
                   style={[styles.srsPdfCellBase, styles[cell]]}
@@ -579,63 +704,113 @@ const TaxINVoiceReceipt = ({
 
           {/* TOTAL ROW - with horizontal line above */}
           <View style={styles.srsPdfTableTotalRow}>
-            <View style={[styles.srsPdfCellBase, styles.srsPdfCellSlNo]}>
+            <View style={[styles.srsPdfCellBase, styles[dataRowCellStyles[0]]]}>
               <Text></Text>
             </View>
-            <View style={[styles.srsPdfCellBase, styles.srsPdfCellParticulars]}>
+            <View style={[styles.srsPdfCellBase, styles[dataRowCellStyles[1]]]}>
               <Text style={styles.srsPdfHeadText}>Total</Text>
             </View>
-            <View style={[styles.srsPdfCellBase, styles.srsPdfCellHsn]}>
+            <View style={[styles.srsPdfCellBase, styles[dataRowCellStyles[2]]]}>
               <Text></Text>
             </View>
-            <View style={[styles.srsPdfCellBase, styles.srsPdfCellPcs]}>
+            <View style={[styles.srsPdfCellBase, styles[dataRowCellStyles[3]]]}>
               <Text style={styles.srsPdfCenterText}>
                 {Math.round(totalValues.qty)}
               </Text>
             </View>
-            <View style={[styles.srsPdfCellBase, styles.srsPdfCellPurity]}>
-              <Text></Text>
-            </View>
-            <View style={[styles.srsPdfCellBase, styles.srsPdfCellGrossWt]}>
-              <Text style={styles.srsPdfRightText}>
-                {formatNumber(totalValues.grossWeight, 3)}
-              </Text>
-            </View>
-            <View style={[styles.srsPdfCellBase, styles.srsPdfCellStWt]}>
-              <Text style={styles.srsPdfRightText}>
-                {formatNumber(totalValues.stoneWeight, 3)}
-              </Text>
-            </View>
-            <View style={[styles.srsPdfCellBase, styles.srsPdfCellNetWt]}>
-              <Text style={styles.srsPdfRightText}>
-                {formatNumber(totalValues.netWeight, 3)}
-              </Text>
-            </View>
-            <View style={[styles.srsPdfCellBase, styles.srsPdfCellStChg]}>
-              <Text style={styles.srsPdfRightText}>
-                {formatNumber(totalValues.stonePrice, 2)}
-              </Text>
-            </View>
-            <View style={[styles.srsPdfCellBase, styles.srsPdfCellVa]}>
-              <Text></Text>
-            </View>
-            <View style={[styles.srsPdfCellBase, styles.srsPdfCellMc]}>
-              <Text></Text>
-            </View>
-            <View style={[styles.srsPdfCellBase, styles.srsPdfCellRate]}>
-              <Text></Text>
-            </View>
-            <View style={[styles.srsPdfCellBase, styles.srsPdfCellAmount]}>
-              <Text style={styles.srsPdfRightText}>
-                {formatNumber(
-                  totalValues.rateAmount +
-                    totalValues.makingCharges +
-                    totalValues.stonePrice +
-                    totalValues.hmCharges,
-                  2
-                )}
-              </Text>
-            </View>
+            {/* Skip Purity column in total row if silver is present */}
+            {!hasSilverItem && (
+              <View style={[styles.srsPdfCellBase, styles[dataRowCellStyles[4]]]}>
+                <Text></Text>
+              </View>
+            )}
+            {hasSilverItem ? (
+              <>
+                <View style={[styles.srsPdfCellBase, styles[dataRowCellStyles[4]]]}>
+                  <Text style={styles.srsPdfRightText}>
+                    {formatNumber(totalValues.grossWeight, 3)}
+                  </Text>
+                </View>
+                <View style={[styles.srsPdfCellBase, styles[dataRowCellStyles[5]]]}>
+                  <Text style={styles.srsPdfRightText}>
+                    {formatNumber(totalValues.stoneWeight, 3)}
+                  </Text>
+                </View>
+                <View style={[styles.srsPdfCellBase, styles[dataRowCellStyles[6]]]}>
+                  <Text style={styles.srsPdfRightText}>
+                    {formatNumber(totalValues.netWeight, 3)}
+                  </Text>
+                </View>
+                <View style={[styles.srsPdfCellBase, styles[dataRowCellStyles[7]]]}>
+                  <Text style={styles.srsPdfRightText}>
+                    {formatNumber(totalValues.stonePrice, 2)}
+                  </Text>
+                </View>
+                <View style={[styles.srsPdfCellBase, styles[dataRowCellStyles[8]]]}>
+                  <Text></Text>
+                </View>
+                <View style={[styles.srsPdfCellBase, styles[dataRowCellStyles[9]]]}>
+                  <Text></Text>
+                </View>
+                <View style={[styles.srsPdfCellBase, styles[dataRowCellStyles[10]]]}>
+                  <Text></Text>
+                </View>
+                <View style={[styles.srsPdfCellBase, styles[dataRowCellStyles[11]]]}>
+                  <Text style={styles.srsPdfRightText}>
+                    {formatNumber(
+                      totalValues.rateAmount +
+                      totalValues.makingCharges +
+                      totalValues.stonePrice +
+                      totalValues.hmCharges,
+                      2
+                    )}
+                  </Text>
+                </View>
+              </>
+            ) : (
+              <>
+                <View style={[styles.srsPdfCellBase, styles[dataRowCellStyles[5]]]}>
+                  <Text style={styles.srsPdfRightText}>
+                    {formatNumber(totalValues.grossWeight, 3)}
+                  </Text>
+                </View>
+                <View style={[styles.srsPdfCellBase, styles[dataRowCellStyles[6]]]}>
+                  <Text style={styles.srsPdfRightText}>
+                    {formatNumber(totalValues.stoneWeight, 3)}
+                  </Text>
+                </View>
+                <View style={[styles.srsPdfCellBase, styles[dataRowCellStyles[7]]]}>
+                  <Text style={styles.srsPdfRightText}>
+                    {formatNumber(totalValues.netWeight, 3)}
+                  </Text>
+                </View>
+                <View style={[styles.srsPdfCellBase, styles[dataRowCellStyles[8]]]}>
+                  <Text style={styles.srsPdfRightText}>
+                    {formatNumber(totalValues.stonePrice, 2)}
+                  </Text>
+                </View>
+                <View style={[styles.srsPdfCellBase, styles[dataRowCellStyles[9]]]}>
+                  <Text></Text>
+                </View>
+                <View style={[styles.srsPdfCellBase, styles[dataRowCellStyles[10]]]}>
+                  <Text></Text>
+                </View>
+                <View style={[styles.srsPdfCellBase, styles[dataRowCellStyles[11]]]}>
+                  <Text></Text>
+                </View>
+                <View style={[styles.srsPdfCellBase, styles[dataRowCellStyles[12]]]}>
+                  <Text style={styles.srsPdfRightText}>
+                    {formatNumber(
+                      totalValues.rateAmount +
+                      totalValues.makingCharges +
+                      totalValues.stonePrice +
+                      totalValues.hmCharges,
+                      2
+                    )}
+                  </Text>
+                </View>
+              </>
+            )}
           </View>
         </View>
 
@@ -688,7 +863,7 @@ const TaxINVoiceReceipt = ({
                 {formatNumber(netAmount)}
               </Text>
             </View>
-           
+
             <View style={styles.srsPdfChargesRow}>
               <Text style={styles.srsPdfChargesLabel}>(-) OLD/SCHEME:</Text>
               <Text style={styles.srsPdfChargesValue}>
@@ -700,8 +875,8 @@ const TaxINVoiceReceipt = ({
               <Text style={styles.srsPdfChargesValue}>
                 {formatNumber(selectedAdvanceReceiptAmount)}
               </Text>
-            </View> 
-             <View style={styles.srsPdfChargesRow}>
+            </View>
+            <View style={styles.srsPdfChargesRow}>
               <Text style={styles.srsPdfChargesLabel}>Net Amount:</Text>
               <Text style={styles.srsPdfChargesValue}>
                 {formatNumber(Math.round(netPayableAmount))}
@@ -715,10 +890,10 @@ const TaxINVoiceReceipt = ({
         {/* ===================================================== */}
         <View style={styles.srsPdfFooterBar}>
           <Text style={styles.srsPdfFooterLeft}>GST : {companyGST}</Text>
-          {/* <Text style={styles.srsPdfFooterCenter}>
-            {companyEmail}{"\n"}
-            Ph : {companyMobile}
-          </Text> */}
+          <Text style={styles.srsPdfFooterCenter}>
+            {/* {companyEmail}{"\n"} */}
+            Ph : 9535403545
+          </Text>
           <Text style={styles.srsPdfFooterRight}>
             BIS Certified Jewellers{"\n"}
             Govt. approved valuers for Jewellery.
