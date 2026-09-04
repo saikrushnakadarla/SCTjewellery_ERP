@@ -2,23 +2,23 @@ import React, { useState, useEffect, useRef } from "react";
 import { Container, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import CustomerDetails from "./CustomerDetails";
-import InvoiceDetails from "./InvoiceDetails";
+import CustomerDetails from "../SalesForm/CustomerDetails";
+import InvoiceDetails from "../SalesForm/InvoiceDetails";
 import ProductDetails from "./ProductDetails";
-import ProductTable from "./ProductTable";
-import PaymentDetails from "./PaymentDetails";
-import useProductHandlers from "./hooks/useProductHandlers";
-import useCalculations from "./hooks/useCalculations";
+import ProductTable from "../SalesForm/ProductTable";
+import PaymentDetails from "../SalesForm/PaymentDetails";
+import useProductHandlers from "./useProductHandlers";
+import useCalculations from "../SalesForm/hooks/useCalculations";
 import "./../Sales/SalesForm.css";
 import baseURL from "./../../../../Url/NodeBaseURL";
-import SalesFormSection from "./SalesForm3Section";
+import SalesFormSection from "../SalesForm/SalesForm3Section";
 import { pdf } from "@react-pdf/renderer";
 import { PDFDownloadLink } from "@react-pdf/renderer";
-import PDFLayout from "./TaxInvoiceA4";
+import PDFLayout from "../SalesForm/TaxInvoiceA4";
 import { useLocation } from "react-router-dom";
 import { saveAs } from "file-saver";
 
-const SalesForm = () => {
+const OnlineOrders = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [showPDFDownload, setShowPDFDownload] = useState(false);
@@ -94,6 +94,7 @@ const SalesForm = () => {
     isTotalPriceCleared,
     setIsTotalPriceCleared,
     manualTotalPriceRef,
+     onlineOrderItems, 
   } = useProductHandlers();
 
   const [repairDetails, setRepairDetails] = useState(() => {
@@ -2515,8 +2516,8 @@ const handleSave = async () => {
         card_amt: paymentDetails.card_amt || 0,
         chq_amt: paymentDetails.chq_amt || 0,
         online_amt: paymentDetails.online_amt || 0,
-        source: "Sales",   
         // SALESMAN FIELDS - USE THE CALCULATED TOTAL
+        source: "Online Orders", 
         salesman_id: updatedFormData.salesman_id || null,
         salesman_name: updatedFormData.salesman_name || null,
         salesman_commission: updatedFormData.salesman_commission || 0,
@@ -2866,6 +2867,7 @@ const handleSave = async () => {
               handleOrderChange={handleOrderChange}
               selectedOrder={selectedOrder}
               orderData={orderData}
+               onlineOrderItems={onlineOrderItems} 
             />
           </div>
 
@@ -3006,4 +3008,4 @@ const handleSave = async () => {
   );
 };
 
-export default SalesForm;
+export default OnlineOrders;

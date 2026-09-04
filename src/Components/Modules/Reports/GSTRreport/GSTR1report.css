@@ -1,0 +1,267 @@
+.gstr1-container {
+  max-width: 1500px;
+  margin: auto;
+  padding: 20px;
+  margin-top: 10px;
+  border-radius: 10px;
+  background-color: rgba(163, 110, 41, 0.08);
+}
+
+.gstr1-header {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+      margin-top: 65px;
+}
+
+.gstr1-header h2 {
+  color: #333;
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: 600;
+  border-bottom: 2px solid #a36e29;
+  padding-bottom: 10px;
+  display: inline-block;
+}
+
+.filter-section {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 15px;
+  padding: 15px 0;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-group label {
+  font-weight: 500;
+  color: #555;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.filter-input,
+.filter-select {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: white;
+  min-width: 150px;
+}
+
+.filter-input:focus,
+.filter-select:focus {
+  outline: none;
+  border-color: #a36e29;
+  box-shadow: 0 0 0 2px rgba(163, 110, 41, 0.1);
+}
+
+.filter-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-filter {
+  padding: 8px 20px;
+  background-color: #a36e29;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.btn-filter:hover {
+  background-color: #8a5d22;
+}
+
+.btn-reset {
+  padding: 8px 20px;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.btn-reset:hover {
+  background-color: #5a6268;
+}
+
+.gstr1-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  flex: 1;
+}
+
+.summary-card {
+  background-color: white;
+  padding: 12px 18px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  min-width: 120px;
+  flex: 1;
+}
+
+.summary-card h4 {
+  color: #666;
+  font-size: 11px;
+  margin-bottom: 5px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.summary-card p {
+  color: #333;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.export-buttons {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.export-buttons .btn {
+  padding: 8px 16px;
+  font-size: 14px;
+}
+
+.gstr1-table-container {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+}
+
+/* DataTable overrides to match Sales Report */
+.gstr1-table-container .table {
+  font-size: 13px;
+  margin-bottom: 0;
+}
+
+.gstr1-table-container .table thead th {
+  background-color: #a36e29;
+  color: white;
+  padding: 10px 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  border: none;
+}
+
+.gstr1-table-container .table tbody td {
+  padding: 8px 12px;
+  vertical-align: middle;
+  border-bottom: 1px solid #eee;
+}
+
+.gstr1-table-container .table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.gstr1-table-container .table tbody tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+.loader {
+  font-size: 18px;
+  color: #a36e29;
+  font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .gstr1-container {
+    padding: 15px;
+  }
+
+  .filter-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-group {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-input,
+  .filter-select {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .filter-buttons {
+    flex-direction: column;
+  }
+
+  .btn-filter,
+  .btn-reset {
+    width: 100%;
+  }
+
+  .gstr1-summary {
+    flex-direction: column;
+  }
+
+  .export-buttons {
+    flex-direction: column;
+    width: 100%;
+    margin-top: 15px;
+  }
+
+  .export-buttons .btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .gstr1-container {
+    padding: 10px;
+  }
+
+  .gstr1-header h2 {
+    font-size: 20px;
+  }
+
+  .summary-card p {
+    font-size: 14px;
+  }
+
+  .gstr1-table-container {
+    padding: 10px;
+  }
+
+  .gstr1-table-container .table {
+    font-size: 11px;
+  }
+
+  .gstr1-table-container .table thead th,
+  .gstr1-table-container .table tbody td {
+    padding: 6px 8px;
+  }
+}

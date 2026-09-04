@@ -190,6 +190,15 @@ const [tabId] = useState(() => getTabId());
                 }
               >
                 Customer Master
+              </Link> 
+               <Link
+                to="/salesmantable"
+                onClick={handleItemClick}
+                className={
+                  isActive("/salesmantable") || isActive("/salesmantable")
+                }
+              >
+                Salesman Master
               </Link>
               <Link
                 to="/suppliertable"
@@ -359,7 +368,16 @@ const [tabId] = useState(() => getTabId());
                 className={isActive("/orderstable") || isActive("/orders")}
               >
                 Orders
+              </Link> 
+
+               <Link
+                to="/onlineorders"
+                onClick={handleItemClick}
+                className={isActive("/onlineorders") || isActive("/onlineorders")}
+              >
+                Online Orders
               </Link>
+
               <Link
                 to="/urdpurchasetable"
                 onClick={handleItemClick}
@@ -373,96 +391,142 @@ const [tabId] = useState(() => getTabId());
           )}
         </div>
 
-        {/* Reports Dropdown */}
-        <div
-          className="navbar-dropdown"
-          onMouseEnter={() => openDropdown("reports")}
-          onMouseLeave={() => closeDropdown("reports")}
-        >
-          <span className="navbar-dropdown-title">
-            REPORTS{" "}
-            <FontAwesomeIcon
-              icon={reportsDropdownOpen ? faChevronUp : faChevronDown}
-              className="dropdown-arrow-icon"
-            />
-          </span>
-          {reportsDropdownOpen && (
-            <div className="navbar-dropdown-content">
-              <Link
-                to="/stockReport"
-                onClick={handleItemClick}
-                className={isActive("/stockReport")}
-              >
-                Stock Report
-              </Link>
-              <Link
-                to="/salesReport"
-                onClick={handleItemClick}
-                className={isActive("/salesReport")}
-              >
-                Sales Report
-              </Link>
-              <Link
-                to="/salesBalanceReport"
-                onClick={handleItemClick}
-                className={isActive("/salesBalanceReport")}
-              >
-                Sales Balance Report
-              </Link>
-              <Link
-                to="/estimateReport"
-                onClick={handleItemClick}
-                className={isActive("/estimateReport")}
-              >
-                Estimate Report
-              </Link>
-              <Link
-                to="/purchaseReport"
-                onClick={handleItemClick}
-                className={isActive("/purchaseReport")}
-              >
-                Purchase Report
-              </Link>
-              <Link
-                to="/purchaseBalanceReport"
-                onClick={handleItemClick}
-                className={isActive("/purchaseBalanceReport")}
-              >
-                Purchase Balance Report
-              </Link>
-              <Link
-                to="/repairsReport"
-                onClick={handleItemClick}
-                className={isActive("/repairsReport")}
-              >
-                Repairs Report
-              </Link>
-              <Link
-                to="/urdPurchaseReport"
-                onClick={handleItemClick}
-                className={isActive("/urdPurchaseReport")}
-              >
-                URDPurchase Report
-              </Link>
-              <Link
-                to="/ratesdata"
-                onClick={handleItemClick}
-                className={isActive("/ratesdata")}
-              >
-                Rates Report
-              </Link>
-              {/* <Link to="/barcodeprinting" onClick={handleItemClick} className={isActive('/barcodeprinting')}>Barcode Printing Report</Link> */}
+{/* Reports Dropdown */}
+<div
+  className="navbar-dropdown"
+  onMouseEnter={() => openDropdown("reports")}
+  onMouseLeave={() => closeDropdown("reports")}
+>
+  <span className="navbar-dropdown-title">
+    REPORTS{" "}
+    <FontAwesomeIcon
+      icon={reportsDropdownOpen ? faChevronUp : faChevronDown}
+      className="dropdown-arrow-icon"
+    />
+  </span>
+  {reportsDropdownOpen && (
+    <div className="navbar-dropdown-content">
+      <Link
+        to="/stockReport"
+        onClick={handleItemClick}
+        className={isActive("/stockReport")}
+      >
+        Stock Report
+      </Link>
+      <Link
+        to="/salesReport"
+        onClick={handleItemClick}
+        className={isActive("/salesReport")}
+      >
+        Sales Report
+      </Link> 
 
-              <Link
-                to="/itemsales"
-                onClick={handleItemClick}
-                className={isActive("/itemsales")}
-              >
-                Item Sale Report
-              </Link>
-            </div>
-          )}
+        <Link
+        to="/salesmancommissionreport"
+        onClick={handleItemClick}
+        className={isActive("/salesmancommissionreport")}
+      >
+        Salesman Commission Report
+      </Link>
+      <Link
+        to="/salesBalanceReport"
+        onClick={handleItemClick}
+        className={isActive("/salesBalanceReport")}
+      >
+        Sales Balance Report
+      </Link>
+      <Link
+        to="/estimateReport"
+        onClick={handleItemClick}
+        className={isActive("/estimateReport")}
+      >
+        Estimate Report
+      </Link>
+      <Link
+        to="/purchaseReport"
+        onClick={handleItemClick}
+        className={isActive("/purchaseReport")}
+      >
+        Purchase Report
+      </Link>
+      <Link
+        to="/purchaseBalanceReport"
+        onClick={handleItemClick}
+        className={isActive("/purchaseBalanceReport")}
+      >
+        Purchase Balance Report
+      </Link>
+      <Link
+        to="/repairsReport"
+        onClick={handleItemClick}
+        className={isActive("/repairsReport")}
+      >
+        Repairs Report
+      </Link>
+      <Link
+        to="/urdPurchaseReport"
+        onClick={handleItemClick}
+        className={isActive("/urdPurchaseReport")}
+      >
+        URDPurchase Report
+      </Link>
+      <Link
+        to="/ratesdata"
+        onClick={handleItemClick}
+        className={isActive("/ratesdata")}
+      >
+        Rates Report
+      </Link>
+      {/* <Link to="/barcodeprinting" onClick={handleItemClick} className={isActive('/barcodeprinting')}>Barcode Printing Report</Link> */}
+      <Link
+        to="/itemsales"
+        onClick={handleItemClick}
+        className={isActive("/itemsales")}
+      >
+        Item Sale Report
+      </Link>
+      
+      {/* GSTR1 with right-side sub-dropdown */}
+      <div 
+        className="navbar-dropdown navbar-right-dropdown"
+        onMouseEnter={(e) => {
+          e.stopPropagation();
+          // Open GSTR1 sub-dropdown
+          const subDropdown = e.currentTarget.querySelector('.navbar-right-dropdown-content');
+          if (subDropdown) subDropdown.style.display = 'block';
+        }}
+        onMouseLeave={(e) => {
+          const subDropdown = e.currentTarget.querySelector('.navbar-right-dropdown-content');
+          if (subDropdown) subDropdown.style.display = 'none';
+        }}
+      >
+        <span className="navbar-dropdown-title">
+          GSTR1{" "}
+          <FontAwesomeIcon
+            icon={faChevronDown}
+            className="dropdown-arrow-icon"
+          />
+        </span>
+        <div className="navbar-right-dropdown-content">
+          <Link
+            to="/gstr1"
+            onClick={handleItemClick}
+            className={isActive("/gstr1")}
+          >
+            GSTR1
+          </Link>
+          <Link
+            to="/hsn-report"
+            onClick={handleItemClick}
+            className={isActive("/hsn-report")}
+          >
+            HSN Report
+          </Link>
         </div>
+      </div>
+    </div>
+  )}
+</div>
 
         {/* Utility/Settings Dropdown */}
         {/* <div

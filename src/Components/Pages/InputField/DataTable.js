@@ -314,7 +314,7 @@ export default function DataTable({
         
         {/* Page Size Selector */}
         <div className="d-flex align-items-center gap-2">
-          <span className="d-none d-sm-inline">Show:</span>
+          <span className="d-none d-sm-inline">Show Per Page:</span>
           <select
             className="form-select form-select-sm"
             value={pageSize}

@@ -111,7 +111,7 @@ const useProductHandlers = () => {
   const tabId = getTabId();
 
   const getFreshFormData = (mobile) => ({
-    id:'',
+    id: '',
     customer_id: "",
     mobile: mobile,
     account_name: "",
@@ -173,9 +173,13 @@ const useProductHandlers = () => {
     festival_discount: "",
     custom_purity: "",
     manual_price_update: false,
-    order_number:'',
-    receipts_amt:"",
-    bal_after_receipts:"",
+    order_number: '',
+    receipts_amt: "",
+    bal_after_receipts: "",
+    salesman_id: "",
+    salesman_name: "",
+    salesman_commission: "",
+    salesman_commission_amount: 0,
   });
 
 
@@ -1061,6 +1065,10 @@ const useProductHandlers = () => {
           piece_taxable_amt: "",
           festival_discount: "",
           custom_purity: "",
+          salesman_id: prevData.salesman_id || "",
+          salesman_name: prevData.salesman_name || "",
+          salesman_commission: prevData.salesman_commission || "",
+          salesman_commission_amount: prevData.salesman_commission_amount || 0,
         }));
         setIsQtyEditable(true); // Default to editable if barcode is cleared
         return; // Exit early

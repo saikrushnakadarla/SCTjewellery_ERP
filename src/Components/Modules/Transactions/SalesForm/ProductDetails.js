@@ -52,7 +52,7 @@ const ProductDetails = ({
   taxableAmount,
   tabId,
   setIsTotalPriceCleared,
-  isManualTotalPriceChange, 
+  isManualTotalPriceChange,
   setIsManualTotalPriceChange,
   offers,
   handleOrderChange,
@@ -63,6 +63,8 @@ const ProductDetails = ({
   const [showModal, setShowModal] = useState(false);
   const isByFixed = formData.pricing === "By fixed";
   const navigate = useNavigate();
+
+  const [commissionAmount, setCommissionAmount] = useState(0);
 
   const defaultBarcode = formData.category
     ? products.find((product) => product.product_name === formData.category)?.rbarcode || ""
@@ -139,6 +141,10 @@ const ProductDetails = ({
       remarks: "",
       sale_status: "Delivered",
       custom_purity: "",
+      salesman_id: prevFormData.salesman_id || "",
+      salesman_name: prevFormData.salesman_name || "",
+      salesman_commission: prevFormData.salesman_commission || "",
+      salesman_commission_amount: prevFormData.salesman_commission_amount || 0,
     }));
   };
 
@@ -261,6 +267,53 @@ const ProductDetails = ({
     formData.pieace_cost,
     formData.pricing,
   ]);
+
+
+// In ProductDetails.js, verify this useEffect is correctly updating formData
+// useEffect(() => {
+//   if (formData.salesman_commission && formData.total_price) {
+//     const totalPrice = parseFloat(formData.total_price) || 0;
+//     const commissionPercent = parseFloat(formData.salesman_commission) || 0;
+//     const calculatedCommission = (totalPrice * commissionPercent) / 100;
+//     setCommissionAmount(calculatedCommission);
+//     // Update formData with commission amount
+//     setFormData(prev => ({
+//       ...prev,
+//       salesman_commission_amount: calculatedCommission
+//     }));
+//   } else {
+//     setCommissionAmount(0);
+//     setFormData(prev => ({
+//       ...prev,
+//       salesman_commission_amount: 0
+//     }));
+//   }
+// }, [formData.total_price, formData.salesman_commission]); 
+
+
+// In ProductDetails.js, replace the commission useEffect with this:
+useEffect(() => {
+  // This is just for display purposes in the form
+  // The actual total commission is calculated in SalesForm
+  if (formData.salesman_commission && formData.total_price) {
+    const totalPrice = parseFloat(formData.total_price) || 0;
+    const commissionPercent = parseFloat(formData.salesman_commission) || 0;
+    const calculatedCommission = (totalPrice * commissionPercent) / 100;
+    setCommissionAmount(calculatedCommission);
+    // Don't update formData here - it's handled in SalesForm
+  } else {
+    setCommissionAmount(0);
+  }
+}, [formData.total_price, formData.salesman_commission]);
+
+  // Add this handler for commission percentage change
+  const handleCommissionChange = (e) => {
+    const commission = parseFloat(e.target.value) || 0;
+    setFormData(prev => ({
+      ...prev,
+      salesman_commission: commission
+    }));
+  };
 
   useEffect(() => {
     if (!offers || offers.length === 0) return;
@@ -1074,6 +1127,30 @@ const ProductDetails = ({
                 name="total_price"
                 value={formData.total_price ?? ""}
                 onChange={handleChange}
+              />
+            </Col>
+
+
+            {/* Salesman Commission Fields */}
+            <Col xs={12} md={2}>
+              <InputField
+                label="Commission %"
+                name="salesman_commission"
+                type="number"
+                value={formData.salesman_commission || ""}
+                onChange={handleCommissionChange}
+                min="0"
+                max="100"
+                step="0.01"
+                placeholder="Enter commission %"
+              />
+            </Col>
+            <Col xs={12} md={2}>
+              <InputField
+                label="Commission Amount"
+                name="salesman_commission_amount"
+                value={commissionAmount.toFixed(2)}
+                readOnly
               />
             </Col>
 

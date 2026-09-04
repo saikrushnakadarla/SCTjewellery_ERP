@@ -212,6 +212,60 @@
   color: rgb(163, 110, 41);
 }
 
+/* Right side sub-dropdown for GSTR1 */
+.navbar-right-dropdown {
+  position: relative;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.navbar-right-dropdown .navbar-dropdown-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #333;
+  font-size: 14px;
+  padding: 4px 0;
+}
+
+.navbar-right-dropdown .navbar-dropdown-title:hover {
+  color: #a36e29;
+}
+
+.navbar-right-dropdown-content {
+  display: none;
+  position: absolute;
+  left: 100%;
+  top: 0;
+  background-color: white;
+  min-width: 180px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  border-radius: 4px;
+  padding: 8px 0;
+  z-index: 1000;
+}
+
+.navbar-right-dropdown-content a {
+  color: #333;
+  padding: 8px 20px;
+  text-decoration: none;
+  display: block;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.navbar-right-dropdown-content a:hover {
+  background-color: #f5f5f5;
+  color: #a36e29;
+}
+
+.navbar-right-dropdown-content a.active {
+  color: #a36e29;
+  font-weight: 600;
+  background-color: #f5f5f5;
+}
+
+
   
 /* Responsive styles for mobile and tablet (iPad) */
 @media (max-width: 768px) {

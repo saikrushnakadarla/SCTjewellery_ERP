@@ -102,6 +102,7 @@ const TagEntry = ({ handleCloseTagModal, selectedProduct, fetchBalance }) => {
         pcs: "1",
         MC_Per_Gram_Label: "",
         printing_purity: '',
+        is_display: true
     });
     const [show, setShow] = useState(false);
     const [showPurchase, setShowPurchase] = useState(false);
@@ -1092,7 +1093,11 @@ const TagEntry = ({ handleCloseTagModal, selectedProduct, fetchBalance }) => {
         }
 
         try {
-            const updatedData = { ...formData, image };
+            const updatedData = {
+                ...formData,
+                image,
+                is_display: formData.is_display ? 1 : 0 // Convert boolean to 1 or 0
+            };
 
             let apiURL = `${baseURL}/post/opening-tags-entry`; // Default: Add new entry
             let method = "POST";
@@ -1169,7 +1174,8 @@ const TagEntry = ({ handleCloseTagModal, selectedProduct, fetchBalance }) => {
                         pcs: "1",
                         pieace_cost: "",
                         mrp_price: "",
-                        total_pcs_cost: "",
+                        total_pcs_cost: "", 
+                        is_display: true
                     }));
                     setImage(null);
                     fetchTagData();
@@ -1214,7 +1220,8 @@ const TagEntry = ({ handleCloseTagModal, selectedProduct, fetchBalance }) => {
                         pcs: "1",
                         pieace_cost: "",
                         mrp_price: "",
-                        total_pcs_cost: "",
+                        total_pcs_cost: "", 
+                        is_display: true
                     }));
                     setImage(null);
                     fetchTagData();
@@ -1280,134 +1287,134 @@ const TagEntry = ({ handleCloseTagModal, selectedProduct, fetchBalance }) => {
 
 
 
-const generateAndDownloadPDF = async (data) => {
-    const doc = new jsPDF({
-        orientation: "landscape",
-        unit: "mm",
-        format: [67, 15], // 67mm width x 15mm height
-    });
-
-    const isByWeight = data.Pricing === "By Weight";
-    const barcodeText = data.PCode_BarCode || "N/A";
-
-    try {
-        // Generate Barcode using JsBarcode
-        const barcodeCanvas = document.createElement("canvas");
-        barcodeCanvas.width = 280;
-        barcodeCanvas.height = 45;
-        
-        JsBarcode(barcodeCanvas, barcodeText, {
-            format: "CODE128",
-            width: 1.5,
-            height: 35,
-            displayValue: true,
-            fontSize: 8,
-            margin: 0
+    const generateAndDownloadPDF = async (data) => {
+        const doc = new jsPDF({
+            orientation: "landscape",
+            unit: "mm",
+            format: [67, 15], // 67mm width x 15mm height
         });
-        
-        const barcodeImageData = barcodeCanvas.toDataURL("image/png");
-        
-        /* ---------- LEFT SIDE PRODUCT DETAILS (32mm width, starting at 1mm margin) ---------- */
-        let startX = 2;
-        let startY = 3.5;
-        let lineGap = 3.2;
-        let currentY = startY;
 
-        doc.setFont("helvetica", "bold");
+        const isByWeight = data.Pricing === "By Weight";
+        const barcodeText = data.PCode_BarCode || "N/A";
 
-        // MKJ Label
-        doc.setFontSize(7.5);
-        doc.text("MKJ", startX, currentY);
-        currentY += lineGap;
+        try {
+            // Generate Barcode using JsBarcode
+            const barcodeCanvas = document.createElement("canvas");
+            barcodeCanvas.width = 280;
+            barcodeCanvas.height = 45;
 
-        // Barcode ID (instead of item name)
-        doc.setFontSize(6.5);
-        doc.text(barcodeText, startX, currentY);
-        currentY += lineGap;
+            JsBarcode(barcodeCanvas, barcodeText, {
+                format: "CODE128",
+                width: 1.5,
+                height: 35,
+                displayValue: true,
+                fontSize: 8,
+                margin: 0
+            });
 
-        if (isByWeight) {
-            // NT WT (Net Weight)
-            doc.setFontSize(7.0);
-            doc.text("NT WT:", startX, currentY);
-            doc.text(`${data.Weight_BW || "0"}`, startX + 12, currentY);
+            const barcodeImageData = barcodeCanvas.toDataURL("image/png");
+
+            /* ---------- LEFT SIDE PRODUCT DETAILS (32mm width, starting at 1mm margin) ---------- */
+            let startX = 2;
+            let startY = 3.5;
+            let lineGap = 3.2;
+            let currentY = startY;
+
+            doc.setFont("helvetica", "bold");
+
+            // MKJ Label
+            doc.setFontSize(7.5);
+            doc.text("MKJ", startX, currentY);
             currentY += lineGap;
 
-            // Gross Weight
-            doc.setFontSize(7.0);
-            doc.text("Gross Wt:", startX, currentY);
-            doc.text(`${data.Gross_Weight || "0"}`, startX + 14, currentY);
-        } else {
-            // For fixed pricing
-            // NT WT (Net Weight)
-            doc.setFontSize(7.0);
-            doc.text("NT WT:", startX, currentY);
-            doc.text(`${data.Weight_BW || "0"}`, startX + 12, currentY);
+            // Barcode ID (instead of item name)
+            doc.setFontSize(6.5);
+            doc.text(barcodeText, startX, currentY);
             currentY += lineGap;
-            
-            // Gross Weight
-            doc.setFontSize(7.0);
-            doc.text("Gross Wt:", startX, currentY);
-            doc.text(`${data.Gross_Weight || "0"}`, startX + 14, currentY);
+
+            if (isByWeight) {
+                // NT WT (Net Weight)
+                doc.setFontSize(7.0);
+                doc.text("NT WT:", startX, currentY);
+                doc.text(`${data.Weight_BW || "0"}`, startX + 12, currentY);
+                currentY += lineGap;
+
+                // Gross Weight
+                doc.setFontSize(7.0);
+                doc.text("Gross Wt:", startX, currentY);
+                doc.text(`${data.Gross_Weight || "0"}`, startX + 14, currentY);
+            } else {
+                // For fixed pricing
+                // NT WT (Net Weight)
+                doc.setFontSize(7.0);
+                doc.text("NT WT:", startX, currentY);
+                doc.text(`${data.Weight_BW || "0"}`, startX + 12, currentY);
+                currentY += lineGap;
+
+                // Gross Weight
+                doc.setFontSize(7.0);
+                doc.text("Gross Wt:", startX, currentY);
+                doc.text(`${data.Gross_Weight || "0"}`, startX + 14, currentY);
+            }
+
+            /* ---------- 1mm EMPTY SPACE FOR FOLDING ---------- */
+
+            /* ---------- RIGHT SIDE BARCODE (from 34mm to 66mm, with top margin) ---------- */
+            const barcodeStartX = 34;
+            const barcodeWidth = 31;
+            const barcodeHeight = 10;
+
+            // Added margin top (changed Y position from 2 to 3)
+            doc.addImage(barcodeImageData, "PNG", barcodeStartX, 3, barcodeWidth, barcodeHeight);
+
+            /* ---------- SAVE PDF ---------- */
+            const pdfBlob = doc.output("blob");
+            await handleSavePDFToServer(pdfBlob, data.PCode_BarCode);
+
+        } catch (error) {
+            console.error("PDF Error:", error);
         }
+    };
 
-        /* ---------- 1mm EMPTY SPACE FOR FOLDING ---------- */
-        
-        /* ---------- RIGHT SIDE BARCODE (from 34mm to 66mm, with top margin) ---------- */
-        const barcodeStartX = 34;
-        const barcodeWidth = 31;
-        const barcodeHeight = 10;
-        
-        // Added margin top (changed Y position from 2 to 3)
-        doc.addImage(barcodeImageData, "PNG", barcodeStartX, 3, barcodeWidth, barcodeHeight);
+    // Helper function to generate simple barcode
+    const generateSimpleBarcode = async (text, height = 30) => {
+        return new Promise((resolve) => {
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d");
 
-        /* ---------- SAVE PDF ---------- */
-        const pdfBlob = doc.output("blob");
-        await handleSavePDFToServer(pdfBlob, data.PCode_BarCode);
+            // Code 128 barcode pattern (simplified - you may want to use a proper library)
+            // For production, use jsbarcode library: npm install jsbarcode
 
-    } catch (error) {
-        console.error("PDF Error:", error);
-    }
-};
-
-// Helper function to generate simple barcode
-const generateSimpleBarcode = async (text, height = 30) => {
-    return new Promise((resolve) => {
-        const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext("2d");
-        
-        // Code 128 barcode pattern (simplified - you may want to use a proper library)
-        // For production, use jsbarcode library: npm install jsbarcode
-        
-        // Temporary simple representation - shows text with barcode-like appearance
-        canvas.width = 300;
-        canvas.height = height;
-        ctx.fillStyle = "white";
-        ctx.fillRect(0, 0, canvas.width, height);
-        ctx.fillStyle = "black";
-        
-        // Draw simple barcode lines based on text characters
-        let x = 10;
-        for (let i = 0; i < text.length; i++) {
-            const charCode = text.charCodeAt(i);
-            const width = 3 + (charCode % 5);
-            ctx.fillRect(x, 2, width, height - 4);
-            x += width + 2;
-            
-            // Add small gap
+            // Temporary simple representation - shows text with barcode-like appearance
+            canvas.width = 300;
+            canvas.height = height;
             ctx.fillStyle = "white";
-            ctx.fillRect(x, 2, 1, height - 4);
+            ctx.fillRect(0, 0, canvas.width, height);
             ctx.fillStyle = "black";
-            x += 1;
-        }
-        
-        // Add text below barcode
-        ctx.fillStyle = "black";
-        ctx.font = "8px Arial";
-        ctx.fillText(text, canvas.width / 2 - 20, height - 2);
-        
-        resolve(canvas.toDataURL());
-    });
-};
+
+            // Draw simple barcode lines based on text characters
+            let x = 10;
+            for (let i = 0; i < text.length; i++) {
+                const charCode = text.charCodeAt(i);
+                const width = 3 + (charCode % 5);
+                ctx.fillRect(x, 2, width, height - 4);
+                x += width + 2;
+
+                // Add small gap
+                ctx.fillStyle = "white";
+                ctx.fillRect(x, 2, 1, height - 4);
+                ctx.fillStyle = "black";
+                x += 1;
+            }
+
+            // Add text below barcode
+            ctx.fillStyle = "black";
+            ctx.font = "8px Arial";
+            ctx.fillText(text, canvas.width / 2 - 20, height - 2);
+
+            resolve(canvas.toDataURL());
+        });
+    };
 
     const handleSavePDFToServer = async (pdfBlob, pcode) => {
         const formData = new FormData();
@@ -1734,7 +1741,11 @@ const generateSimpleBarcode = async (text, height = 30) => {
     }, [selectedProduct]);
 
     const handleEdit = (rowData) => {
-        setFormData(rowData);
+        // setFormData(rowData); 
+        setFormData({
+            ...rowData,
+            is_display: rowData.is_display === 1 || rowData.is_display === true // Ensure boolean
+        });
         setIsEditMode(true);
         setImage(rowData.image || "");
 
@@ -2551,17 +2562,36 @@ const generateSimpleBarcode = async (text, height = 30) => {
                                     />
                                     Generate PDF
                                 </label> */}
-                                <label className="checkbox-label" htmlFor="tcs">
-                                    <input
-                                        type="checkbox"
-                                        id="tcs"
-                                        name="tcsApplicable"
-                                        className="checkbox-input"
-                                        checked={isGeneratePDF}
-                                        onChange={(e) => setIsGeneratePDF(e.target.checked)}
-                                    />
-                                    Print QR Code
-                                </label>
+                                <div className="d-flex gap-4 align-items-center">
+                                    <label className="checkbox-label" htmlFor="tcs">
+                                        <input
+                                            type="checkbox"
+                                            id="tcs"
+                                            name="tcsApplicable"
+                                            className="checkbox-input"
+                                            checked={isGeneratePDF}
+                                            onChange={(e) => setIsGeneratePDF(e.target.checked)}
+                                        />
+                                        Print QR Code
+                                    </label>
+
+                                    <label className="checkbox-label" htmlFor="isDisplay">
+                                        <input
+                                            type="checkbox"
+                                            id="isDisplay"
+                                            name="is_display"
+                                            className="checkbox-input"
+                                            checked={formData.is_display}
+                                            onChange={(e) => {
+                                                setFormData(prev => ({
+                                                    ...prev,
+                                                    is_display: e.target.checked
+                                                }));
+                                            }}
+                                        />
+                                        Display on Sale
+                                    </label>
+                                </div>
 
                                 <div className="text-end">
                                     <Button

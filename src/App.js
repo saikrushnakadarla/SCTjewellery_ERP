@@ -74,6 +74,12 @@ import Festoffers from './Components/Modules/Masters/FestivalOffers/FestOffers';
 import Festofferstable from './Components/Modules/Masters/FestivalOffers/FestOffersTable';
 import ItemSales from './Components/Modules/Reports/ItemSale/ItemSale';
 import StockReport from "./Components/Modules/Reports/StockReport/StockReport";
+import GSTR1report from "./Components/Modules/Reports/GSTRreport/GSTR1report";
+import HSNReport from "./Components/Modules/Reports/GSTRreport/HSNReport";
+import OnlineOrders from "./Components/Modules/Transactions/OnlineOrders/OnlineOrders";
+import Salesmanmaster_table from "./Components/Modules/Masters/Salesman/Salesmanmaster_table";
+import Salesmanmaster from "./Components/Modules/Masters/Salesman/Salesmanmaster";
+import SalesmanCommissionreport from "./Components/Modules/Reports/SalesmanCommissionreport/SalesmanCommissionreport";
 
 function App() {
   const location = useLocation();
@@ -167,7 +173,13 @@ function App() {
           <Route path="/purchase-payment" element={<PurchasePayment />} />
           <Route path="/ratecuts" element={<RateCuts />} />
           <Route path="/itemsales" element={<ItemSales />} />
-          <Route path="/stockReport" element={<StockReport />} />
+          <Route path="/stockReport" element={<StockReport />} /> 
+           <Route path="/gstr1" element={<GSTR1report />} /> 
+           <Route path="/hsn-report" element={<HSNReport />} /> 
+           <Route path="/onlineorders" element={<OnlineOrders />} /> 
+           <Route path="/salesmantable" element={<Salesmanmaster_table />} /> 
+           <Route path="/salesman" element={<Salesmanmaster />} /> 
+           <Route path="/salesmancommissionreport" element={<SalesmanCommissionreport />} />
         </Routes>
       </AuthProvider>
     </>
